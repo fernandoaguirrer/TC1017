@@ -1,0 +1,31 @@
+#include <iostream>
+using namespace std;
+
+int GCD(int x, int y){
+	if(x==y){
+	return x;
+	}
+
+	else if(x>y){
+	return GCD(x-y,y);
+	}
+
+	else{
+	return GCD(x,y-x);
+	}
+}
+
+
+int main(){
+	
+	int x, y;
+	cout<<"Introduce un numero"<<endl;
+	cin>>x;
+
+	cout<<"Introduce el segundo numero"<<endl;
+	cin>>y;
+
+	cout<<"El maximo comun divisor de " << x << " y " << y <<" es "<<GCD(x,y)<<endl;
+	
+	return 0;
+}
