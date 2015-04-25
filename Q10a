@@ -1,0 +1,35 @@
+#Quiz 10
+Heres is my code for the program
+
+      #include <iostream>
+      using namespace std;
+      // Jesús Fernado Aguirre Robles
+      
+      int findThrees(int arr[], int array_size){
+      	int x= array_size;
+      
+      	int suma=0; 
+      
+      	for (int i=0; i<x; i++){
+      		cout<<"Introduce un numero"<<endl;
+      		cin>>arr[i];
+      			if((arr[i]%3)==0){
+      				suma = suma + arr[i];
+      			}
+      	}
+      	return suma;
+      }
+      
+      int main(){
+      	
+      	int x;
+      
+      	cout<<"Introduce el tamaño del array"<<endl;
+      	cin>>x;
+      
+      	int arr[x];
+      
+      	cout<<"La suma de los números divisibles entre tres es: "<<findThrees(arr, x)<<endl;
+      
+      	return 0;
+      }
