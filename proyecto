@@ -1,0 +1,404 @@
+Here is our code for the final project that is a Sudoku in C++
+
+
+        #include <iostream>
+        #include <stdio.h> //Libreria para los colores
+        #include <fstream> //Libreria para leer archivos de texto
+        using namespace std;
+        
+        #define RED "\x1b[31m"
+        #define GREEN "\x1b[32m"
+        #define FINCOL "\x1b[0m" // Termina con los anteriores colores
+        
+        // Solving Problems with Programming
+        // Professor Ken Bauer
+        //
+        // Sudoku
+        
+        // Luis Angel Aguilar Carrillo
+        // A01225421
+        // and
+        // Jesús Fernando Aguirre Robles
+        // A01224994
+        
+        // Para checar las verticales se aplica el mismo razonamiento, solo que en el arreglo se cambia el sentido de los ciclos for
+        
+        	void print(char sudoku[][9], char s[][9]){ // Funcion que imprime el sudoku
+        
+        	for(int j=0; j<=8; j++){ // Y
+        		if(j==3 || j==6){
+        			cout << "  - - - + - - - + - - -" <<endl;
+        		}
+        		for(int i=0; i<=8; i++){ // X
+        			if (i==0 || i==3 || i==6){
+        				cout<<"| ";
+        			}
+        			if (sudoku[j][i]==s[j][i]){
+        				printf(RED "%c " FINCOL, sudoku[j][i]);
+        			}
+        			if(sudoku[j][i]!= s[j][i]){
+        				
+        				if (sudoku[j][i]=='1' || sudoku[j][i]=='2' || sudoku[j][i]=='3' ||
+        					sudoku[j][i]=='4' || sudoku[j][i]=='5' || sudoku[j][i]=='6' ||
+        					sudoku[j][i]=='7' || sudoku[j][i]=='8' || sudoku[j][i]=='9'){
+        						
+        						printf(GREEN "%d " FINCOL, (sudoku[j][i]-48)); // se le resta 48 ya que los char tienen diferentes valores para los numeros del 0-9
+        				}
+        
+        				else{
+        					cout << sudoku[j][i]<< " ";
+        				}
+        
+        			} // else if
+        		}
+        		cout << endl;
+        	} 
+        }
+        
+        int check_v(char sudoku[][9]){
+        	int cont=0, r;
+        	int u, d, t, c, cinco, s, siete, o, n;
+        
+        	for(int i=0; i<=8; i++){ // x
+        		for(int j=0; j<=8; j++){ // y
+        			if(sudoku[j][i]=='X'){
+        				return 0;
+        			}
+        			else if(sudoku[j][i]=='1'){
+        				u = 1;
+        			}
+        			else if(sudoku[j][i]=='2'){
+        				d = 1;
+        			}
+        			else if(sudoku[j][i]=='3'){
+        				t = 1;
+        			}
+        			else if(sudoku[j][i]=='4'){
+        				c = 1;
+        			}
+        			else if(sudoku[j][i]=='5'){
+        				cinco = 1;
+        			}
+        			else if(sudoku[j][i]=='6'){
+        				s = 1;
+        			}
+        			else if(sudoku[j][i]=='7'){
+        				siete = 1;
+        			}
+        			else if(sudoku[j][i]=='8'){
+        				o = 1;
+        			}
+        			else if(sudoku[j][i]=='9'){
+        				n = 1;
+        			}
+        		} // llave segundo for
+        		if (u==1 and d==1 and t==1 and c==1 and cinco==1 and s==1 and siete==1 and o==1 and n==1){
+        			cont = cont +1;
+        		}
+        	} // llave primer for
+        	if (cont==9){
+        		r =1;
+        	}
+        	else{
+        		r = 0;
+        	}
+        	return r;
+        }
+        
+        int check_h(char sudoku[][9]){           // Función que checa que no se repita el numero
+        	int u,d,t,c,cinco,s,siete,o,n;	       // en todas las lineas horizontales del sudoku (9x9)
+        	int r, cont=0;
+        
+        	for(int i=0; i<=8;i++){    // Y
+        		
+        		for (int j=0; j<=8; j++){
+        			
+        			if(sudoku[i][j]=='X'){
+        				return 0;
+        			}
+        			else if(sudoku[i][j]=='1'){
+        				u=1;
+        			}
+        			else if(sudoku[i][j]=='2'){
+        				d=1;
+        			}
+        			else if(sudoku[i][j]=='3'){
+        				t=1;
+        			}
+        			else if(sudoku[i][j]=='4'){
+        				c=1;
+        			}
+        			else if(sudoku[i][j]=='5'){
+        				cinco=1;
+        			}
+        			else if(sudoku[i][j]=='6'){
+        				s=1;
+        			}
+        			else if(sudoku[i][j]=='7'){
+        				siete=1;
+        			}
+        			else if(sudoku[i][j]=='8'){
+        				o=1;
+        			}
+        			else if(sudoku[i][j]=='9'){
+        				n=1;
+        			}
+        		} // llave segundo for
+        		if (u==1 and d==1 and t==1 and c==1 and cinco==1 and s==1 and siete==1 and o==1 and n==1){  // si ninguno es diferente, significa que solo hay uno de cada uno
+        			cont = cont+1;                                        // en toda la linea vertical, y guarda ese "SI" a 1 para utilizarlo después
+        		}
+        	} // primer for
+        
+        	if (cont==9){                                             // si el contador llega a 9, ningun numero se repitió en todas
+        		r = 1;                                                  // las lineas horizontales
+        	}
+        	else{
+        		r =0;
+        	}
+        	return r;
+        }
+        
+          int check_cuad(char sudoku[][9],int m,int n, int q, int l){
+          int uno,dos,tres,cuatro,cinco,seis,siete,ocho,nueve= 0;
+          int respuesta=0;
+          for(int y = q; y<=9-m;y++){
+            for(int x=l;x<=9-n;x++){
+              if(sudoku[y][x]=='0')
+                return 0;
+              else if(sudoku[y][x]=='1')
+                uno=1;
+              else if(sudoku[y][x]=='2')
+                dos=1;
+              else if(sudoku[y][x]=='3')
+                tres=1;
+              else if(sudoku[y][x]=='4')
+                cuatro=1;
+              else if(sudoku[y][x]=='5')
+                cinco=1;
+              else if(sudoku[y][x]=='6')
+                seis=1;
+              else if(sudoku[y][x]=='7')
+                siete=1;
+              else if(sudoku[y][x]=='8')
+                ocho=1;
+              else if(sudoku[y][x]=='9')
+                nueve=1;
+            }
+          }
+          if(uno==1 && dos==1 && tres==1 && cuatro==1 && cinco==1 
+            && seis==1 && siete==1 && ocho==1 && nueve==1)
+            respuesta=1;
+          return respuesta;
+        }
+        
+        
+        void reglas(){	//Función que nos imprime las reglas del juego
+          
+          cout << endl << "Bienvenido. Estás a punto de jugar un SUDOKU. A continuación se te mostrarán las reglas del mismo" << endl << endl;
+          cout << "1. Solo puedes introducir números del 1 al 9" << endl;
+          cout << "2. No se pueden repetir tus números de forma horizontal ni vertical"<<endl;
+          cout << "3. No se pueden repetir tus números en cada cuadrante"<<endl;
+          cout << "4. No puedes eliminar los numeros en " << RED <<"rojo" << FINCOL << " los cuales son indispensables para el juego." << endl << endl;
+          cout << "                                  HORA DE JUGAR" << endl << endl;
+        }
+        
+        int check_cel(char sudoku[][9], int x, int y){ // checar que en la coordenada dada, haya espacios vacíos
+        	int val;
+        	
+        	if(sudoku[y][x]=='X'){
+        		val=1;
+        	}
+        	
+        	else{
+        		
+        		cout << "Espacio no valido. Intenta de nuevo." << endl;
+        		val = 0;
+        	}
+        	
+        	return val;
+        }
+        
+        int borrar(char sudoku[][9], char s[][9], int x, int y){ // FUNCION PARA BORRAR NUMERO 
+        	int val;
+        	if (sudoku[y][x]==s[y][x]){
+        		val = 0;
+        		cout << endl;
+        		cout << "Espacio no valido. Este numero no puede ser modificado. Intenta de nuevo" << endl << endl;
+        	}
+        	else {
+        		val = 1;
+        	}
+        	return val;
+        }
+        
+        
+        int main(){ //Función principal del programa
+        
+        	string line;
+        	string opc_menu = "";
+        	char sudoku[9][9]; 		// SUDOKU PRINCIPAL
+        	char s[9][9]; 			// Para NO eliminar los valores originales
+        	// int comenzar=1;
+        	int c1=5, c2=0, c3=0, c4=0, c5=0, c6=0, c7=0, c8=0, c9=0;
+        	int a, b, c, d;
+        	int k=0; // para algunos fors
+        	char sustit = 'X'; // donde haya ceros / nada
+        	int check=0;
+        	char num ='0'; // el que se ingresará en el sudoku
+        	int x, y;   // vertical - horizontal
+        	int vert=0, hor=0;
+        	int q=1;
+        	
+        
+        	ifstream archivo("resp.txt"); // lee el documento
+        
+        	while(true){			// almacena los valores del doc en el programa
+        		getline(archivo,line);
+        		int p=0;
+        		for (int i=0; i<9;i++){
+        			sudoku[k][i]=line[p];
+        			s[k][i]=line[p];
+        			p=p+2;
+        		}
+        		k = k+1;
+        		if (archivo.eof())
+        			break;
+        	}
+        
+        	for (int j=0; j<=8; j++){   // y
+        		for (int i=0; i<=8; i++){ // x
+        			if (sudoku[j][i]=='0')
+        				sudoku[j][i]= sustit;
+        		}
+        	}
+        
+        	reglas();
+        
+        	do{
+        
+        		print(sudoku, s);
+        		cout << endl ;
+        		cout << "Que te gustaría hacer?" << endl << endl;
+        		cout << "1. Ingresar un numero (ingresar)" << endl;
+        		cout << "2. Quitar un numero (quitar)" << endl;
+        		cout << "3. Imprimir la tabla (print)" << endl;
+        		cout << "4. Reiniciar el juego (reiniciar)" << endl;
+        		cout << "5. Salir (salir)" << endl;
+        		cin >> opc_menu;
+        		cout << endl;
+        
+        		if(opc_menu=="ingresar"){ // INGRESAR NU.
+        			while(check!=1){ //check= revisar 
+        			cout << "Ingresa la posición en X (horizontal)" << endl;
+        			cin >> x;
+        
+        			while (x<1 || x>9){
+        				cout << "Tiene que ser un valor entre 1 y 9. Ingresa la posición en X de nuevo" << endl;
+        				cin >> x;
+        			}
+        			x = x-1;
+        
+        			cout << "Ingresa la posición en Y (vertical)" << endl;
+        			cin >> y;
+        
+        			while (y<1 || y>9){
+        				cout << "Tiene que ser un valor entre 1 y 9. Ingresa la posición en Y de nuevo" << endl;
+        				cin >> y;
+        			}
+        			y = y-1;
+        			check = check_cel(sudoku,x,y); 
+        
+        		}
+        		 	check=0;
+        		 	
+        
+        		 	if(num!='1' && num!='2'&& num!='3'&& num!='4'&& num!='5' && num!='6'&& num!='7'&& num!='8'&& num!='9'){
+        		 		cout << "Ingresa un numero. Tiene que ser entre 1 y 9." << endl;
+        		 		cin >> num;
+        		 	}
+        
+        			sudoku[y][x]=num;
+        			num='0';
+        		}
+        
+        		else if(opc_menu=="quitar"){ // QUITAR NU.
+        			
+        			while(check!=1){ //check= revisar 
+        			cout << "Ingresa la posición en X (horizontal)" << endl;
+        			cin >> x;
+        
+        			while (x<1 || x>9){
+        				cout << "Tiene que ser un valor entre 1 y 9. Ingresa la posición en X de nuevo" << endl;
+        				cin >> x;
+        			}
+        			x = x-1;
+        
+        			cout << "Ingresa la posición en Y (vertical)" << endl;
+        			cin >> y;
+        
+        			while (y<1 || y>9){
+        				cout << "Tiene que ser un valor entre 1 y 9. Ingresa la posición en Y de nuevo" << endl;
+        				cin >> y;
+        			}
+        			y = y-1;
+        			check = borrar(sudoku,s,x,y);
+        			
+        		}
+        			check=0;
+        			sudoku[y][x]=sustit;
+        		}
+        
+        		else if(opc_menu=="print"){
+        			
+        			cout << "=========================================" << endl << endl;
+        			continue;
+        
+        		}
+        
+        		else if(opc_menu=="reiniciar"){
+        			cout << "=========================================" << endl;
+        			main();
+        
+        		}
+        
+        
+        
+        		else if(opc_menu=="salir"){
+        
+        			cout << "=========================================" << endl << endl;
+        			cout << "Gracias por jugar." << endl;
+        			
+        			continue;
+        		}
+        		
+        		else {
+        			cout << "Dato invalido. Intenta de nuevo." << endl;
+        		}
+        
+        		vert= check_v(sudoku);
+        		hor = check_h(sudoku);
+        
+        		c1= check_cuad(sudoku,a=7, b=7, c = 0, d = 0); 
+        	    c2= check_cuad(sudoku,a=7, b=4, c = 0, d = 3);                                           
+        	    c3= check_cuad(sudoku,a=7, b=1, c = 0, d = 6);                                                                                  
+        	    c4= check_cuad(sudoku,a=4, b=7, c = 3, d = 0);                                           
+        	    c5= check_cuad(sudoku,a=4, b=4, c = 3, d = 3); 
+        	    c6= check_cuad(sudoku,a=4, b=1, c = 3, d = 6); 
+        	    c7= check_cuad(sudoku,a=1, b=7, c = 6, d = 0); 
+        	    c8= check_cuad(sudoku,a=1, b=4, c = 6, d = 3); 
+        	    c9= check_cuad(sudoku,a=1, b=1, c = 6, d = 6); 
+        
+        	    if(vert==1 and hor==vert and c1==1 and c1==c2 and c3==c4 and c5==c6 and c7==c8 and c9==1){
+        
+        	    	print(sudoku,s);
+        	    	cout << endl << endl;
+        	    	cout << "Felicidades. Ganaste el juego." << endl << endl;
+        	    	
+        	    	//opc_menu == "salir";
+        	    }
+        
+        	}while (opc_menu !="salir");
+        
+        
+        	return 0;
+        }
